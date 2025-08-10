@@ -18,6 +18,7 @@ env/
 # MLflow tracking data
 # --------------------
 mlruns/
+mlartifacts/
 
 # --------------------
 # Logs & temp outputs
