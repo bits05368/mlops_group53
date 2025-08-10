@@ -9,10 +9,10 @@ __pycache__/
 # --------------------
 # Virtual environments
 # --------------------
+.env
 venv/
 .venv/
-env/
-.env/
+
 
 # --------------------
 # MLflow tracking data
