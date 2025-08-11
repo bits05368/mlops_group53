@@ -1,7 +1,7 @@
 IMAGE=bits05368/iris-mlops-api:latest
 CONTAINER_NAME=iris-mlops-api
 
-echo "Pulling latest image..."
+echo "Pulling latest build image..."
 docker pull $IMAGE
 
 echo "Stopping existing container..."
