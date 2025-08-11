@@ -38,7 +38,7 @@ jobs:
   build-and-push:
     needs: lint-test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'  # Only run on main branch for deployment
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
