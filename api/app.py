@@ -173,3 +173,4 @@ if __name__ == "__main__":
     port = int(os.getenv("FLASK_PORT", 8000))
     print(f"Starting Flask API on {host}:{port}")
     app.run(host=host, port=port)
+    
