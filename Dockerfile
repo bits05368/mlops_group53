@@ -1,5 +1,5 @@
 # Use official Python image
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -19,5 +19,8 @@ COPY . /app/
 # Expose port your Flask app listens on
 EXPOSE 8000
 
-# Run the Flask app
-CMD ["python", "api/app.py"]
+# Set default MLflow Tracking URI for Ubuntu (will be overridden by docker-compose)
+ENV MLFLOW_TRACKING_URI=http://127.0.0.1:5000/
+
+# Run Flask with Gunicorn + Uvicorn worker
+CMD ["gunicorn", "api.app:app", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]

@@ -4,7 +4,7 @@ import pandas as pd
 import os
 import logging
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify,Response
+from flask import Flask, request, jsonify, Response
 from pydantic import BaseModel, ValidationError, confloat
 from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 
@@ -48,7 +48,9 @@ def load_best_model():
     print(f"Loading model from: {model_uri}")
     return mlflow.pyfunc.load_model(model_uri)
 
+
 model = load_best_model()
+
 print("Model loaded successfully!")
 
 # Pydantic schema for input validation
