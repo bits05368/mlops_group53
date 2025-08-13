@@ -17,7 +17,6 @@ TEST_FP = os.path.join(datafolder, "test.csv")
 def load_data():
     train_df = pd.read_csv(TRAIN_FP)
     test_df = pd.read_csv(TEST_FP)
-
     # X: all numeric features except target columns
     X_train = train_df.drop(columns=["target", "target_name"], errors="ignore")
     y_train = train_df["target"]
@@ -31,25 +30,19 @@ def train_and_log_model(model_cls, params, X_train, X_test, y_train, y_test):
         model.fit(X_train, y_train)
         preds = model.predict(X_test)
         acc = accuracy_score(y_test, preds)
-
         # Log params & metrics
         mlflow.log_params(params)
         mlflow.log_metric("accuracy", acc)
-
         # Log model
         mlflow.sklearn.log_model(model, "model")
-
         print(f"{model_cls.__name__} accuracy: {acc:.4f}")
         return acc, mlflow.active_run().info.run_id
 
 def main():
     mlflow.set_tracking_uri("http://127.0.0.1:5000")  # Change if needed
     mlflow.set_experiment("iris_experiment")
-
     load_and_preprocess()
-
     X_train, X_test, y_train, y_test = load_data()
-
     results = []
     print(f"start: logistic regression and random forest")
     # Model 1: Logistic Regression
@@ -57,24 +50,20 @@ def main():
     acc, run_id = train_and_log_model(LogisticRegression, lr_params,
                                       X_train, X_test, y_train, y_test)
     results.append(("LogisticRegression", acc, run_id))
-
     # Model 2: Random Forest
     rf_params = {"n_estimators": 100, "random_state": 42}
     acc, run_id = train_and_log_model(RandomForestClassifier, rf_params,
                                       X_train, X_test, y_train, y_test)
     results.append(("RandomForestClassifier", acc, run_id))
     print(f"complete: logistic regression and random forest")
-
     # Pick best model
     best_model_name, best_acc, best_run_id = max(results, key=lambda x: x[1])
     print(f"Best model: {best_model_name} (acc={best_acc:.4f})")
-
     # -----------------------------
     # Register the best model
     # -----------------------------
     tracking_uri_type = urlparse(mlflow.get_tracking_uri()).scheme
     model_uri = f"runs:/{best_run_id}/model"
-
     if tracking_uri_type != "file":
         # Register to MLflow Model Registry
         model_version = mlflow.register_model(model_uri, f"{best_model_name}_Model")
@@ -84,3 +73,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
